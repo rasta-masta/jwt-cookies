@@ -4,7 +4,7 @@ module.exports = {
   verifyToken: async (req, res, next) => {
     try {
       let authHeader = req.headers.authorization
-      let token = authHeader.split(" ")[1];
+      let token = authHeader && authHeader.split(" ")[1];
       console.log("Receive Token:", authHeader)
       if (!token) {
         return res.status(401).send({
@@ -12,14 +12,15 @@ module.exports = {
         });
       }
       
-      jwt.sign(token, 'process.env.JWT_SECRET', async (err, decoded) => {
-        if(err && err?.message === 'TokenExpiredError') return res.status(401).send('TOKEN EXPIRED..!!')
-        if(err) return res.status(403).send({ msg: 'FORBIDDEN..'}); 
+      jwt.verify(token, process.env.JWT_SECRET, async (err, decoded) => {
+        if(err && err?.message === 'TokenExpiredError') 
+          res.status(401).send('TOKEN EXPIRED..!!')
+        if(err) return res.status(403).send({ msg: 'TOKEN EXPIRED, FORBIDDEN..'}); 
           
           console.log("Token verification: successfull");
           console.log('Receive Token:', authHeader);
           console.log("Decoded Token:", decoded);
-          req.decoded = decoded.email; 
+          req.user = decoded.user; 
           next();
       });
       

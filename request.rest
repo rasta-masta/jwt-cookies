@@ -21,7 +21,7 @@ Content-Type: application/json
     
 ###
 GET http://localhost:2000/users
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywibmFtZSI6IkFnbmEgTiIsImVtYWlsIjoiYWduYUBtYWlsLmNvbSIsImlhdCI6MTY5OTc1MTgxOSwiZXhwIjoxNjk5NzUxODM5fQ.sGWAXcCSfINCZ33QlnP-2UzfRber_6E4U3ctla6HP4s
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjMsImVtYWlsIjoiYWduYUBtYWlsLmNvbSIsImlhdCI6MTcwMDAzMTQ5NiwiZXhwIjoxNzAwMDMxNTE2fQ.dCLv2qHFAWu1oLYxqA2I-UtU4ZJ_LlBkYU9Yq3JLE1M 
 
 ###
 GET http://localhost:2000/token

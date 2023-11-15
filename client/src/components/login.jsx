@@ -15,15 +15,16 @@ import { Link, useNavigate} from 'react-router-dom';
 import axios from 'axios';
 import { useDispatch } from 'react-redux'
 import { login, setTokens } from "../redux/userSlice";
+import { useState } from "react";
 
 const LoginUser = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [msg, setMsg] = useState('');
   const toast = useToast();
 
   const handleSubmit = async(data) => {
-    
-    try {
+     try {
        const response = await axios.post('http://localhost:2000/users/login', {
           userName : data.userName,
           password : data.password
@@ -48,11 +49,11 @@ const LoginUser = () => {
         //   'Content-Type': 'application/json',
         //   'origin':'http://localhost:5173',
         //   'credential' : true
-        // });
-        
+        // }); 
         } catch (error) {
           console.log(error)
-            alert('AN ERROR OCCURED DURING LOGIN..!!')
+           setMsg('User Not Found..!!')
+            // alert('AN ERROR OCCURED DURING LOGIN..!!')
         }
     }
 
@@ -77,9 +78,7 @@ const LoginUser = () => {
       borderRadius={"10px"}
       p={"15px"}
       boxShadow={"1px 1px 5px rgba(0, 0, 0, 0.5)"}
-      >
-     
-     
+      >   
       <Formik
         initialValues={{
           userName: "",
@@ -93,15 +92,15 @@ const LoginUser = () => {
       >
       {(formitProps) => {
         // console.log(formitProps)
-    
         return(
         
           <Form>
-
+            <Text textAlign={"center"} fontWeight={"500"}>{msg}</Text>
             <Heading><Text textAlign={"center"} mb={"10px"}>Login</Text></Heading>
             <FormControl>
               <FormLabel>User Name</FormLabel>
-              <Input as={Field} type='text' name='userName'/>
+              <Input as={Field} type='text' name='userName' 
+              />
               <ErrorMessage
                 component='div'
                 name="userName"
@@ -111,7 +110,9 @@ const LoginUser = () => {
 
             <FormControl>
               <FormLabel>Password</FormLabel>
-              <Input as={Field} type='password' name='password' autoComplete="off"/>
+              <Input as={Field} type='password' name='password' autoComplete="off"
+              
+              />
               <ErrorMessage
                 component='div'
                 name="password"

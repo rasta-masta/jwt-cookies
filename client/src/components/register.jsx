@@ -33,7 +33,7 @@ const Register = () => {
           // 'credential' : true
        });
         
-      if (response.data.msg === 'REGISTERED..!!') {
+      if (response.status === 200) {
           toast({
             title: "Success",
             description: "Your are Registered..!!",
@@ -64,6 +64,7 @@ const Register = () => {
         <Heading>
           <Text>Register</Text>
         </Heading>
+        <Text>{msg}</Text>
         <FormControl>
           <FormLabel>User Name</FormLabel>
           <Input
@@ -88,7 +89,8 @@ const Register = () => {
             type="password"
             name="password"
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            autoComplete='off'
+            onChange={(e) => setPassword(e.target.value) }
           />
         </FormControl>
         <Button type="submit">Register</Button>

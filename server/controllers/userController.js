@@ -15,14 +15,13 @@ module.exports = {
             email,
             password: hashPassword
         });
-        res.json({msg: "REGISTERED..!!"});
+        res.status(200).json({msg: "REGISTERED..!!"});
     } catch (error) {
         console.log(error);
         res.status(500).json({ msg: "Registration failed. Please try again." });
     }
   },
   login : async(req, res) => {
-    
     const { userName, password } = req.body
     try {
         const user = await User.findOne({
@@ -43,12 +42,13 @@ module.exports = {
         const userId = user.id;
         const name = user.userName;
         const email = user.email;
-        const payload = {id: userId, name, email}
-        const accessToken = jwt.sign(payload, 'process.env.JWT_SECRET', {expiresIn: '20s'});  
-        const refreshToken = jwt.sign(payload, 'process.env.REFRESH_TOKEN_SECRET', {expiresIn: '1d'})
+        const payload = {id: userId, userName: name, email}
+        const accessToken = jwt.sign(payload, process.env.JWT_SECRET, {expiresIn: '20s'});  
+        const refreshToken = jwt.sign(payload, process.env.REFRESH_TOKEN_SECRET, {expiresIn: '1d'})
         
-        console.log("Generated Access Token:", accessToken);
-        console.log("Generated Refresh Token:", refreshToken);
+        // console.log("Generated Access Token:", accessToken);
+        // console.log("Generated Refresh Token:", refreshToken);
+        console.log("ENV:", process.env.JWT_SECRET);
                 
         await user.update({refresh_token: refreshToken},{
           where:{
@@ -61,14 +61,13 @@ module.exports = {
           maxAge: 24 * 60 * 60 * 1000
       });
        res.setHeader('Content-Type', 'application/json')
-       return res.status(200).json({ accessToken, userName, msg: "LOGIN SUCCESFULLY..!" });
+       return res.status(200).json({ accessToken, msg: "LOGIN SUCCESFULLY..!" });
     } catch (error) {
         res.status(500).json("INTERNAL SERVER ERROR..!");
         console.error('Error in this Controller: ', error);
     }
   }, 
   getUsers : async(req, res) => {
-    
     try {
         const user = await User.findAll({
             attributes:["id", "userName", "email"]
@@ -84,7 +83,7 @@ module.exports = {
     try {
       const result = await User.findOne({
         where: {
-          id: req.user.id
+          userName
         }
       })
       res.status(200).send({ result })
@@ -101,10 +100,10 @@ module.exports = {
         }
     });
     if(!user) return res.sendStatus(204);
-    // const userId = user.id;
+    const userId = user.id;
     await User.update({refresh_token: null},{
         where:{
-            id: user.id
+            id: userId
         }
     });
     res.clearCookie('refreshToken');
